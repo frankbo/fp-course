@@ -269,8 +269,11 @@ lengthGT4 _ = False
 --
 -- prop> \x -> let types = x :: Int in reverse (x :. Nil) == x :. Nil
 reverse :: List a -> List a
-reverse Nil = Nil
-reverse (x :. xs) = (reverse xs) ++ x :. Nil
+reverse = reverseAcc Nil
+
+reverseAcc :: List a -> List a -> List a
+reverseAcc a Nil = a
+reverseAcc acc (x :. xs) = reverseAcc (x :. acc) xs
 
 -- | Produce an infinite `List` that seeds with the given value at its head,
 -- then runs the given function for subsequent elements

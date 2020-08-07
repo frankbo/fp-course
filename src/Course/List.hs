@@ -236,8 +236,9 @@ seqOptional (x :. xs) = bindOptional (\v -> (mapOptional (\n -> v :. n) (seqOpti
 -- >>> find (const True) infinity
 -- Full 0
 find :: (a -> Bool) -> List a -> Optional a
-find =
-  error "todo: Course.List#find"
+find f l = case (filter f l) of
+  Nil -> Empty
+  (x :. _) -> Full x
 
 -- | Determine if the length of the given list is greater than 4.
 --

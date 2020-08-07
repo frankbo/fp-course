@@ -254,8 +254,8 @@ find f l = case (filter f l) of
 -- >>> lengthGT4 infinity
 -- True
 lengthGT4 :: List a -> Bool
-lengthGT4 =
-  error "todo: Course.List#lengthGT4"
+lengthGT4 (_ :. _ :. _ :. _ :. _ :. _) = True
+lengthGT4 _ = False
 
 -- | Reverse a list.
 --
@@ -269,8 +269,8 @@ lengthGT4 =
 --
 -- prop> \x -> let types = x :: Int in reverse (x :. Nil) == x :. Nil
 reverse :: List a -> List a
-reverse =
-  error "todo: Course.List#reverse"
+reverse Nil = Nil
+reverse (x :. xs) = (reverse xs) ++ x :. Nil
 
 -- | Produce an infinite `List` that seeds with the given value at its head,
 -- then runs the given function for subsequent elements

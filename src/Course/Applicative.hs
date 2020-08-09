@@ -103,17 +103,11 @@ instance Applicative Optional where
 --
 -- prop> \x y -> pure x y == x
 instance Applicative ((->) t) where
-  pure ::
-    a ->
-    ((->) t a)
-  pure =
-    error "todo: Course.Applicative pure#((->) t)"
-  (<*>) ::
-    ((->) t (a -> b)) ->
-    ((->) t a) ->
-    ((->) t b)
-  (<*>) =
-    error "todo: Course.Apply (<*>)#instance ((->) t)"
+  pure :: a -> ((->) t a)
+  pure a = \x -> a
+
+  (<*>) :: (t -> (a -> b)) -> (t -> a) -> (t -> b)
+  (<*>) f a = \t -> (f t)(a t)
 
 -- | Apply a binary function in the environment.
 --

@@ -62,7 +62,7 @@ instance Applicative List where
   pure a = a :. Nil
 
   (<*>) :: List (a -> b) -> List a -> List b
-  (<*>) fs as = flatMap (\f -> (map f as)) fs
+  (<*>) fs as = flatMap (`map` as) fs
 
 -- | Insert into an Optional.
 --
@@ -107,7 +107,7 @@ instance Applicative ((->) t) where
   pure a = \x -> a
 
   (<*>) :: (t -> (a -> b)) -> (t -> a) -> (t -> b)
-  (<*>) f a = \t -> (f t)(a t)
+  (<*>) f a = \t -> (f t) (a t)
 
 -- | Apply a binary function in the environment.
 --

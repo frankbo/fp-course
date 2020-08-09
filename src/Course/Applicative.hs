@@ -81,8 +81,7 @@ instance Applicative Optional where
   pure = Full
 
   (<*>) :: Optional (a -> b) -> Optional a -> Optional b
-  (<*>) (Full f) (Full a) = pure (f a)
-  (<*>) _ _ = Empty
+  (<*>) f a = bindOptional (`mapOptional` a) f
 
 -- | Insert into a constant function.
 --

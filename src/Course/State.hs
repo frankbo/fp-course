@@ -38,24 +38,23 @@ exec (State f) s = snd (f s)
 --
 -- prop> \(Fun _ f) s -> eval (State f) s == fst (runState (State f) s)
 eval :: State s a -> s -> a
-eval =
-  error "todo: Course.State#eval"
+eval s a = fst $ runState s a -- strange syntax
 
 -- | A `State` where the state also distributes into the produced value.
 --
 -- >>> runState get 0
 -- (0,0)
 get :: State s s
-get =
-  error "todo: Course.State#get"
+get = State {runState = \s -> (s, s)}
+
+-- get = State(\a -> (a, a)) -- Alternative call
 
 -- | A `State` where the resulting state is seeded with the given value.
 --
 -- >>> runState (put 1) 0
 -- ((),1)
 put :: s -> State s ()
-put =
-  error "todo: Course.State#put"
+put a = State (\_ -> ((), a))
 
 -- | Implement the `Functor` instance for `State s`.
 --
@@ -63,8 +62,10 @@ put =
 -- (10,6)
 instance Functor (State s) where
   (<$>) :: (a -> b) -> State s a -> State s b
-  (<$>) =
-    error "todo: Course.State#(<$>)"
+  (<$>) f (State run) = State (\s -> let (a, t) = run s in (f a, t))
+
+-- f <$> State k =
+--   State (\s -> let (a, t) = k s in (f a, t))
 
 -- | Implement the `Applicative` instance for `State s`.
 --
@@ -78,11 +79,16 @@ instance Functor (State s) where
 -- (10,["apple","banana"])
 instance Applicative (State s) where
   pure :: a -> State s a
-  pure =
-    error "todo: Course.State pure#instance (State s)"
+  pure a = State (\s -> (a, s))
+
   (<*>) :: State s (a -> b) -> State s a -> State s b
-  (<*>) =
-    error "todo: Course.State (<*>)#instance (State s)"
+  (<*>) (State run) (State run2) =
+    State
+      ( \s ->
+          let (f, t) = run s
+              (a, b) = run2 t
+           in (f a, b)
+      )
 
 -- | Implement the `Monad` instance for `State s`.
 --

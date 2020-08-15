@@ -102,8 +102,13 @@ instance Applicative (State s) where
 -- (10,16)
 instance Monad (State s) where
   (=<<) :: (a -> State s b) -> State s a -> State s b
-  (=<<) =
-    error "todo: Course.State (=<<)#instance (State s)"
+  (=<<) f (State run) =
+    State
+      ( \s ->
+          let (a, z) = run s
+              (State r2) = (f a)
+           in r2 z
+      )
 
 -- | Find the first element in a `List` that satisfies a given predicate.
 -- It is possible that no element is found, hence an `Optional` result.
